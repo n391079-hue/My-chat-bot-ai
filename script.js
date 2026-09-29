@@ -8,20 +8,17 @@ async function sendMessage() {
         return;
     }
 
-    // User message
     const userMessage = document.createElement("div");
     userMessage.className = "user-message";
     userMessage.textContent = question;
     chatBox.appendChild(userMessage);
 
-    // Bot loading message
     const botMessage = document.createElement("div");
     botMessage.className = "bot-message";
     botMessage.textContent = "🤖 Thinking...";
     chatBox.appendChild(botMessage);
 
     input.value = "";
-    chatBox.scrollTop = chatBox.scrollHeight;
 
     try {
         const response = await fetch("/chat", {
@@ -44,18 +41,15 @@ async function sendMessage() {
 
     } catch (error) {
         console.error(error);
-        botMessage.textContent =
-            "❌ Server se connection nahi ho paaya.";
+        botMessage.textContent = "❌ Server se connection nahi hua.";
     }
 
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-
-// Enter press karne par message send
 document.getElementById("userInput").addEventListener(
     "keydown",
-    function (event) {
+    function(event) {
         if (event.key === "Enter") {
             sendMessage();
         }
