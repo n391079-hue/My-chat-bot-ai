@@ -1,5 +1,4 @@
-function sendMessage() {
-
+async function sendMessage() {
     const input = document.getElementById("userInput");
     const chatBox = document.getElementById("chatBox");
 
@@ -9,37 +8,56 @@ function sendMessage() {
         return;
     }
 
-    // Show user's message
+    // User message
     const userMessage = document.createElement("div");
-
     userMessage.className = "user-message";
     userMessage.textContent = question;
-
     chatBox.appendChild(userMessage);
 
-    // Temporary reply
+    // Bot loading message
     const botMessage = document.createElement("div");
-
     botMessage.className = "bot-message";
-    botMessage.textContent =
-        "🤖 Main abhi AI se connect nahi hua hoon. Next step mein mujhe AI se connect karenge!";
-
+    botMessage.textContent = "🤖 Thinking...";
     chatBox.appendChild(botMessage);
 
     input.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: question
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.answer) {
+            botMessage.textContent = data.answer;
+        } else {
+            botMessage.textContent = "❌ AI se response nahi mila.";
+        }
+
+    } catch (error) {
+        console.error(error);
+        botMessage.textContent =
+            "❌ Server se connection nahi ho paaya.";
+    }
 
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 
-// Enter button
+// Enter press karne par message send
 document.getElementById("userInput").addEventListener(
     "keydown",
-    function(event) {
-
+    function (event) {
         if (event.key === "Enter") {
             sendMessage();
         }
-
     }
 );
