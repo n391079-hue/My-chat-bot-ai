@@ -16,14 +16,8 @@ app.post("/chat", async (req, res) => {
     try {
         const question = req.body.question;
 
-        if (!question) {
-            return res.status(400).json({
-                error: "Question missing"
-            });
-        }
-
         const response = await client.responses.create({
-            model: "gpt-5.6-luna",
+            model: "gpt-5",
             input: question
         });
 
